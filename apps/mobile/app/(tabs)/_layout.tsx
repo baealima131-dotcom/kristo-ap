@@ -1,6 +1,7 @@
 import { Tabs } from "expo-router";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import { View } from "react-native";
+import { Platform, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const VIP_BG = "#0B0F17";
 const VIP_BORDER = "rgba(255,255,255,0.10)";
@@ -31,12 +32,15 @@ function ProfileAvatarIcon({ focused }: { focused: boolean }) {
 }
 
 export default function TabLayout() {
+  const insets = useSafeAreaInsets();
+  const androidBottomInset = Platform.OS === "android" ? insets.bottom : 0;
+
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-position: "absolute",
+position: Platform.OS === "ios" ? "absolute" : "relative",
           left: 0,
           right: 0,
           bottom: 0,
@@ -45,9 +49,9 @@ position: "absolute",
           borderTopColor: "rgba(255,255,255,0.08)",
           borderTopWidth: 1,
 
-          height: 92,
+          height: Platform.OS === "android" ? 66 + androidBottomInset : 92,
           paddingTop: 10,
-          paddingBottom: 26,
+          paddingBottom: Platform.OS === "android" ? Math.max(8, androidBottomInset) : 26,
 
           elevation: 10,
           shadowColor: "#000",
